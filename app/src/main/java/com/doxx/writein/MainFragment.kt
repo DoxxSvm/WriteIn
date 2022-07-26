@@ -10,15 +10,19 @@ import android.widget.Toast
 import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
+import androidx.navigation.NavController
+import androidx.navigation.Navigation
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.doxx.writein.adapters.NoteAdapter
 import com.doxx.writein.databinding.FragmentMainBinding
 import com.doxx.writein.models.NoteResponse
 import com.doxx.writein.utils.NetworkResult
+import com.doxx.writein.utils.TokenManager
 import com.doxx.writein.viewmodel.NoteViewModel
 import com.google.gson.Gson
 import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
 
 @AndroidEntryPoint
@@ -28,6 +32,8 @@ class MainFragment : Fragment() {
     private val binding get() = _binding!!
     private val noteViewModel by viewModels<NoteViewModel> ()
    private lateinit var  adapter:NoteAdapter
+   @Inject
+   lateinit var tokenManager:TokenManager
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -35,6 +41,7 @@ class MainFragment : Fragment() {
         // Inflate the layout for this fragment
 
         _binding =FragmentMainBinding.inflate(inflater,container,false)
+
         adapter=NoteAdapter (::onNoteClicked)
         return binding.root
     }
@@ -47,6 +54,11 @@ class MainFragment : Fragment() {
         binding.noteList.adapter=adapter
         binding.addNote.setOnClickListener {
             findNavController().navigate(R.id.action_mainFragment_to_noteFragment)
+        }
+        binding.logout.setOnClickListener {
+            tokenManager.delToken()
+            findNavController().navigate(MainFragmentDirections.actionMainFragmentToRegisterFragment())
+
         }
         bindObservers()
 

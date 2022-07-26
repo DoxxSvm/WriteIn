@@ -26,4 +26,7 @@ Don\'t have an account?
     <string name="txt_description_hint">Write your description</string>
     <string name="txt_submit">Submit</string>
     <string name="add_note">Add Note</string>
+    <string name="secret_key">Secret Key</string>
+    <string name="txt_confirm_password">Confirm Password</string>
+    <string name="confirm_secret_key">Confirm Secret Key</string>
 </resources>

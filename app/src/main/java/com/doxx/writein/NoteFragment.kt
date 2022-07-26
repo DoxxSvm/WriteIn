@@ -1,5 +1,6 @@
 package com.doxx.writein
 
+import android.content.Context
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -11,6 +12,7 @@ import androidx.navigation.fragment.findNavController
 import com.doxx.writein.databinding.FragmentNoteBinding
 import com.doxx.writein.models.NoteRequest
 import com.doxx.writein.models.NoteResponse
+import com.doxx.writein.utils.AES
 import com.doxx.writein.utils.NetworkResult
 import com.doxx.writein.viewmodel.NoteViewModel
 import com.google.gson.Gson
@@ -61,12 +63,20 @@ class NoteFragment : Fragment() {
             }
         }
         binding.btnSubmit.setOnClickListener {
-            val title = binding.txtTitle.text.toString()
-            val desc = binding.txtDescription.text.toString()
+            var title = binding.txtTitle.text.toString()
+            var desc = binding.txtDescription.text.toString()
+            val secretKey= getSecretKey()
+            title = secretKey?.let { it1 -> AES.encrypt(title, it1).toString() }.toString()
+            desc = secretKey?.let { it1 -> AES.encrypt(desc, it1).toString() }.toString()
             val noteRequest = NoteRequest(title,desc)
             if(note == null) noteViewModel.createNote(noteRequest)
             else noteViewModel.updateNote(note!!._id,noteRequest)
         }
+    }
+
+    private fun getSecretKey(): String? {
+        val sharedPreference =  requireActivity().getSharedPreferences("DOXX", Context.MODE_PRIVATE)
+        return sharedPreference.getString("SECRET_KEY",null)
     }
 
     private fun setUpInitialData() {

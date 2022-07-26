@@ -7,7 +7,7 @@
 
     <TextView
         android:id="@+id/textView"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="20dp"
         android:layout_marginTop="24dp"
@@ -15,9 +15,20 @@
         android:text="Notes"
         android:textColor="@color/black"
         android:textSize="28sp"
-        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/logout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginTop="24dp"
+        app:cornerRadius="50dp"
+        android:backgroundTint="@color/black"
+        android:text="Logout"
+        android:textAllCaps="false"
+        android:layout_marginLeft="20dp"/>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/note_list"

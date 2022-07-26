@@ -1,5 +1,6 @@
 package com.doxx.writein.adapters
 
+import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
@@ -7,6 +8,8 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.doxx.writein.databinding.NoteItemBinding
 import com.doxx.writein.models.NoteResponse
+import com.doxx.writein.utils.AES
+import okhttp3.internal.notify
 
 class NoteAdapter(private val onNoteClicked: (NoteResponse) -> Unit) :
     ListAdapter<NoteResponse, NoteAdapter.NoteViewHolder>(ComparatorDiffUtil()) {
@@ -15,7 +18,6 @@ class NoteAdapter(private val onNoteClicked: (NoteResponse) -> Unit) :
         val binding = NoteItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return NoteViewHolder(binding)
     }
-
     override fun onBindViewHolder(holder: NoteViewHolder, position: Int) {
         val note = getItem(position)
         note?.let {
@@ -27,12 +29,22 @@ class NoteAdapter(private val onNoteClicked: (NoteResponse) -> Unit) :
         RecyclerView.ViewHolder(binding.root) {
 
         fun bind(note: NoteResponse) {
-            binding.title.text = note.title
-            binding.desc.text = note.description
+            var title = note.title
+            var desc = note.description
+            title= getSecretKey()?.let { AES.decrypt(title, it) }.toString()
+            desc= getSecretKey()?.let { AES.decrypt(desc, it) }.toString()
+
+            binding.title.text = title
+            binding.desc.text = desc
             binding.root.setOnClickListener {
                 onNoteClicked(note)
             }
         }
+        private fun getSecretKey(): String? {
+            val sharedPreference =  itemView.context.getSharedPreferences("DOXX", Context.MODE_PRIVATE)
+            return sharedPreference.getString("SECRET_KEY",null)
+        }
+
 
     }
 

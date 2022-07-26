@@ -18,4 +18,10 @@ class TokenManager @Inject constructor(@ApplicationContext context: Context) {
     fun getToken():String?{
         return prefs.getString(USER_TOKEN,null)
     }
+    fun delToken(){
+        val editor = prefs.edit().apply{
+            putString(USER_TOKEN,null)
+            apply()
+        }
+    }
 }

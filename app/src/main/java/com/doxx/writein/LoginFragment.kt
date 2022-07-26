@@ -1,5 +1,6 @@
 package com.doxx.writein
 
+import android.content.Context
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -73,11 +74,19 @@ class LoginFragment : Fragment() {
     private fun getUserRequest():UserRequest{
         val email = binding.txtEmail.text.toString()
         val pass = binding.txtPassword.text.toString()
+        val secretKey = binding.secretKeyLogin.text.toString()
+        saveSecretKey(secretKey)
         return UserRequest(email,pass,"")
     }
     private fun validateUserInput():Pair<Boolean,String>{
         val userRequest = getUserRequest()
         return viewModel.validateCredentials(userRequest.email,userRequest.password,userRequest.username,true)
+    }
+    private fun saveSecretKey(secretKey: String) {
+        val sharedPreference =  requireActivity().getSharedPreferences("DOXX", Context.MODE_PRIVATE)
+        val editor = sharedPreference.edit()
+        editor.putString("SECRET_KEY",secretKey)
+        editor.commit()
     }
 
 
